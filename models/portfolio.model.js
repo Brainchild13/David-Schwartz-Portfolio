@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const portfolioSchema = Schema({
+const portfolioSchema = new Schema({
     "portfolioName": {
         required: true,
         type: String,
