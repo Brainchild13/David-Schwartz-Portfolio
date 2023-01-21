@@ -17,7 +17,11 @@ const portfolioSchema = new Schema({
     },
     "portfolioMainImage": {
         type: String,
-    }
+    },
+    portfolioContributors: [{
+        type: Schema.Types.ObjectId,
+        ref: "User"
+    }]
 })
 
 module.exports = mongoose.model('Portfolio', portfolioSchema);
