@@ -1,24 +1,47 @@
 const Portfolio = require('../models/portfolioModel');
 
-const getPortfolios = async (req, res) => {
-    try {
-        const portfolios = await Portfolio.find();
-        res.status(200).json(portfolios)
-        console.log(portfolios)
-    } catch (err) {
-        res.status(500).json({ message: err.message }); 
-    }    
-}
-
-const addPortfolio = async (req, res) => {
-    const portfolio = new Portfolio(req.body);
-    try {
-        const newPortfolio = await portfolio.save()
-        res.status(201).json(newPortfolio);
-        console.log(newPortfolio);
-    } catch (err) {
-        res.status(400).json({ message: err.message }); 
+const portfolioControllers = {
+    all: async (req, res) => {
+        try {
+            const allPortfolios = await Portfolio.find()
+            res.json(allPortfolios);
+        } catch (err) {
+            res.json({Errors: err})
+        }
+    },
+    create: async (req, res) => {
+        try {
+            let newPortfolio = new Portfolio({
+                portfolioName: req.body.portfolioName,
+                portfolioWebsite: req.body.portfolioWebsite,
+                portfolioSoftware: req.body.portfolioSoftware,
+                portfolioDescription: req.body.portfolioDescription,
+                portfolioMainImage: req.body.portfolioImage,
+                portfolioContributors: req.body.portfolioContributors
+            })
+            let savedPortfolio = await newPortfolio.save();
+            res.json(savedPortfolio);
+        } catch (err) {
+            res.json({Error: err})
+        }
+    },
+    update: async (req, res) => {
+        try {
+            let foundPortfolio = await Portfolio.findOneAndUpdate({portfolioName: req.body.portfolioName}, req.body);
+        res.json(foundPortfolio);
+        } catch (err) {
+            res.json({Error: err})
+        }
+    },
+    delete: async (req, res) => {
+        try {
+            let deletedPortfolio = await Portfolio.findOneAndDelete({portfolioName: req.body.portfolioName}, req.body);
+            res.json(deletedPortfolio)
+        res.json(deletedPortfolio);
+        } catch (err) {
+            res.json({Error: err})
+        }
     }
 }
 
-module.exports = { getPortfolios, addPortfolio };
+module.exports = portfolioControllers;

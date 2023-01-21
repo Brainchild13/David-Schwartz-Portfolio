@@ -1,25 +1,47 @@
 const User = require('../models/userModel');
 
-const getUsers = async (req, res) => {
-    try {
-        const users = await User.find();
-        res.status(200).json(users);
-        console.log(users)
-    } catch (err) {
-        res.status(500).json({ message: err.message});
+
+const userControllers = {
+    all: async (req, res) => {
+        try {
+            let allUsers = User.find();
+            res.json(allUsers)
+        } catch (err) {
+            res.json({ errors: err });
+        }
+    },
+    create: async (req, res) => {
+        try {
+           const newUser = new User({
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            email: req.body.email, 
+            password: req.body.password
+        })  
+        let savedUser = await newUser.save();
+        res.json(savedUser);
+        } catch (err) {
+            res.json({errors: err});
+        }
+    },
+    update: async (req, res) => {
+        try {
+            let foundPortfolio = Portfolio.find({portfolioName: req.body.portfolioName}, req.body);
+            res.json(foundPortfolio);
+        } catch (err) {
+                res.json({Error: err})
+        }
+       
+    },
+    delete: async (req, res) => {
+        try {
+            let deletedPortfolio = await Portfolio.findOneAndDelete({portfolioName: req.body.portfolioName}, req.body)
+        res.json(deletedPortfolio);
+        } catch (err) {
+            res.json({Error: err})
+        }
     }
 }
 
-const addUser = async (req, res) => {
-    const user = new User(req.body);
 
-    try {
-        const newUser = await user.save();
-        res.status(201).json(newUser);
-        console.log(newUser)
-    } catch (err) {
-        res.status(400).json({ message: err.message});
-    }
-}
-
-module.exports = { getUsers, addUser };
+module.exports = userControllers;

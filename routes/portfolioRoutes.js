@@ -1,12 +1,16 @@
 const express = require('express');
 const router = express.Router();
 
-const { getPortfolios, addPortfolio } = require('../controllers/portfolioControllers');
+const portfolioControllers = require('../controllers/portfolioControllers');
 
 
 
-router.get('/portfolios', getPortfolios);
+router.get('/portfolios', portfolioControllers.all);
 
-router.post('/portfolio', addPortfolio);
+router.post('/portfolios/create', portfolioControllers.create);
+
+router.put('/portfolios/update', portfolioControllers.update);
+
+router.delete('/portfolios/delete', portfolioControllers.delete);
 
 module.exports = router;
